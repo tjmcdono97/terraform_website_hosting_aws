@@ -2,7 +2,9 @@ provider "aws" {
   region = var.aws_region
 }
 
-provider "cloudflare" {}
+provider "cloudflare" {
+  api_token = var.CLOUDFLARE_API_TOKEN
+}
 
 resource "aws_s3_bucket" "site" {
   bucket = var.site_domain
@@ -75,7 +77,6 @@ resource "cloudflare_record" "site_cname" {
   name    = var.site_domain
   value   = aws_s3_bucket.site.website_endpoint
   type    = "CNAME"
-
   ttl     = 1
   proxied = true
 }
@@ -85,8 +86,25 @@ resource "cloudflare_record" "www" {
   name    = "www"
   value   = var.site_domain
   type    = "CNAME"
-
   ttl     = 1
   proxied = true
 }
+
+
+# resource "aws_s3_object" "object" {
+#   for_each     = fileset("html/", "**")
+#   bucket       = aws_s3_bucket.site.bucket
+#   key          = each.value
+#   source       = "html/${each.value}"
+#   content_type = lookup(local.mime_types, regex("\\.[^.]+$", each.value), null)
+#   etag         = filemd5("/html/${each.value}")
+#   tags = {
+#     Name        = "s3 Bucket"
+#     Environment = "Dev"
+#   }
+# } # end resource
+
+# locals {
+#   mime_types = jsondecode(file("${path.root}/mime.json"))
+# } # end locals
 
