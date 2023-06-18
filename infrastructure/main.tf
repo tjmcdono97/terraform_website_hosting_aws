@@ -5,7 +5,7 @@
 provider "aws" {
   region = var.aws_region
 
-    versioning {
+  versioning {
     enabled = true
   }
 }
@@ -64,7 +64,7 @@ resource "aws_s3_bucket_policy" "site" {
 # Create an S3 bucket for the "www" subdomain
 resource "aws_s3_bucket" "www" {
   bucket = "www.${var.site_domain}"
-    versioning {
+  versioning {
     enabled = true
   }
 }
