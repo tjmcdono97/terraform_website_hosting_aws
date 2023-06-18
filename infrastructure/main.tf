@@ -4,10 +4,6 @@
 # Define AWS as the provider with the specified region
 provider "aws" {
   region = var.aws_region
-
-  versioning {
-    enabled = true
-  }
 }
 
 # Define Cloudflare as a provider (assuming authentication is already configured)
@@ -15,6 +11,9 @@ provider "aws" {
 # Create an S3 bucket for the site
 resource "aws_s3_bucket" "site" {
   bucket = var.site_domain
+  versioning {
+    enabled = true
+  }
 }
 
 # Configure public access settings for the site bucket
