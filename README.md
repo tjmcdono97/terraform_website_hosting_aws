@@ -1,4 +1,3 @@
-```
 # Website for Airbnb Condo
 
 This project provides Terraform configurations to deploy a static website to AWS S3 and configure Cloudflare DNS.
@@ -71,13 +70,3 @@ Before you begin, ensure that you have the following prerequisites installed:
    ```
 
    Review the plan output and type "yes" when prompted to confirm the destruction of resources.
-
-## Contributing
-
-Contributions are welcome! If you encounter any issues or have suggestions for improvements, please open an issue or submit a pull request.
-
-## License
-
-This project is licensed under the [MPL-2.0 License](LICENSE).
-```
-```
