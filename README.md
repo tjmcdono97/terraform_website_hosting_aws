@@ -1,4 +1,4 @@
-# Website for Airbnb Condo
+# Website with terraform
 
 This project provides Terraform configurations to deploy a static website to AWS S3 and configure Cloudflare DNS.
 
