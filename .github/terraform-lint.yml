@@ -1,0 +1,32 @@
+name: Terraform Formatting and Checks
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Change to infrastructure directory
+        run: cd infrastructure
+
+      - name: Run terraform fmt
+        run: terraform fmt -check=true -recursive
+
+      - name: Run terraform init
+        run: terraform init -input=false -no-color
+
+      - name: Run terraform validate
+        run: terraform validate -no-color
