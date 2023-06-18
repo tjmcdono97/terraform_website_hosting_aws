@@ -9,3 +9,10 @@ variable "site_domain" {
   description = "The domain name to use for the static site"
   default     = "www.site_domain.com"
 }
+
+
+variable "logging_bucket" {
+  type        = string
+  description = "The domain name to use for the static site"
+  default     = "website-activity-logs"
+}

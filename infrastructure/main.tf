@@ -1,16 +1,19 @@
 # Copyright (c) HashiCorp, Inc.
 # SPDX-License-Identifier: MPL-2.0
 
+# Define AWS as the provider with the specified region
 provider "aws" {
   region = var.aws_region
 }
 
-provider "cloudflare" {}
+# Define Cloudflare as a provider (assuming authentication is already configured)
 
+# Create an S3 bucket for the site
 resource "aws_s3_bucket" "site" {
   bucket = var.site_domain
 }
 
+# Configure public access settings for the site bucket
 resource "aws_s3_bucket_public_access_block" "access_block" {
   bucket = aws_s3_bucket.site.id
 
@@ -20,6 +23,7 @@ resource "aws_s3_bucket_public_access_block" "access_block" {
   restrict_public_buckets = false
 }
 
+# Configure the website hosting settings for the site bucket
 resource "aws_s3_bucket_website_configuration" "site" {
   bucket = aws_s3_bucket.site.id
 
@@ -32,19 +36,19 @@ resource "aws_s3_bucket_website_configuration" "site" {
   }
 }
 
-
+# Configure the bucket policy to allow public read access to objects
 resource "aws_s3_bucket_policy" "site" {
   bucket = aws_s3_bucket.site.id
 
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version   = "2012-10-17"
     Statement = [
       {
         Sid       = "PublicReadGetObject"
         Effect    = "Allow"
         Principal = "*"
         Action    = "s3:GetObject"
-        Resource = [
+        Resource  = [
           aws_s3_bucket.site.arn,
           "${aws_s3_bucket.site.arn}/*",
         ]
@@ -53,10 +57,12 @@ resource "aws_s3_bucket_policy" "site" {
   })
 }
 
+# Create an S3 bucket for the "www" subdomain
 resource "aws_s3_bucket" "www" {
   bucket = "www.${var.site_domain}"
 }
 
+# Configure public access settings for the www bucket
 resource "aws_s3_bucket_public_access_block" "www_access_block" {
   bucket = aws_s3_bucket.www.id
 
@@ -66,6 +72,7 @@ resource "aws_s3_bucket_public_access_block" "www_access_block" {
   restrict_public_buckets = false
 }
 
+# Configure the website hosting settings for the www bucket with a redirect
 resource "aws_s3_bucket_website_configuration" "www" {
   bucket = aws_s3_bucket.www.id
 
@@ -74,12 +81,14 @@ resource "aws_s3_bucket_website_configuration" "www" {
   }
 }
 
+# Query Cloudflare for the domain zone
 data "cloudflare_zones" "domain" {
   filter {
     name = var.site_domain
   }
 }
 
+# Create a Cloudflare record to map the site domain to the S3 bucket endpoint
 resource "cloudflare_record" "site_cname" {
   zone_id = data.cloudflare_zones.domain.zones[0].id
   name    = var.site_domain
@@ -90,6 +99,7 @@ resource "cloudflare_record" "site_cname" {
   proxied = true
 }
 
+# Create a Cloudflare record for the "www" subdomain
 resource "cloudflare_record" "www" {
   zone_id = data.cloudflare_zones.domain.zones[0].id
   name    = "www"
@@ -100,6 +110,7 @@ resource "cloudflare_record" "www" {
   proxied = true
 }
 
+# Create a Cloudflare page rule to enforce HTTPS for all URLs
 resource "cloudflare_page_rule" "https" {
   zone_id = data.cloudflare_zones.domain.zones[0].id
   target  = "*.${var.site_domain}/*"
@@ -108,7 +119,7 @@ resource "cloudflare_page_rule" "https" {
   }
 }
 
-
+# Upload HTML files to the site S3 bucket
 resource "aws_s3_bucket_object" "html" {
   for_each = fileset("${path.module}/html", "**/*")
 
@@ -119,6 +130,7 @@ resource "aws_s3_bucket_object" "html" {
   etag         = filemd5("${path.module}/html/${each.key}")
 }
 
+# Define local variable for MIME types
 locals {
   mime_types = {
     "aac"    = "audio/aac",
@@ -198,3 +210,4 @@ locals {
     "md"     = "text/markdown",
   }
 }
+

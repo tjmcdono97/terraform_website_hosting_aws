@@ -4,6 +4,10 @@ This project provides Terraform configurations to deploy a static website to AWS
 
 Check out the webpage at https://mayaunit148b.com/
 
+## Deployment Managed by Spacelift.io
+
+The deployment of this project is managed by [Spacelift.io](https://spacelift.io/), an infrastructure as code automation platform. Spacelift.io helps automate the deployment and management of Terraform projects, making it easier to maintain and operate your infrastructure.
+
 ## Prerequisites
 
 Before you begin, ensure that you have the following prerequisites installed:
