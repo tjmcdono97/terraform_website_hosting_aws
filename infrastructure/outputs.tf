@@ -4,9 +4,9 @@ output "website_bucket_name" {
 }
 
 output "bucket_endpoint" {
-  description = "Bucket endpoint"
-  value       = aws_s3_bucket.site.website_endpoint
+  value = aws_s3_bucket.site.bucket_regional_domain_name
 }
+
 
 output "domain_name" {
   description = "Website endpoint"
