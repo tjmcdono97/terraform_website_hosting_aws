@@ -2,6 +2,10 @@
 resource "aws_s3_bucket" "logging_bucket" {
   bucket = var.logging_bucket
 
+  versioning {
+    enabled = true
+  }
+
   notification {
     queue {
       queue_arn     = aws_sqs_queue.notification_queue.arn
