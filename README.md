@@ -3,6 +3,8 @@
 
 This project provides Terraform configurations to deploy a static website to AWS S3 and configure Cloudflare DNS.
 
+Check out the webpage at https://mayaunit148b.com/
+
 ## Prerequisites
 
 Before you begin, ensure that you have the following prerequisites installed:
