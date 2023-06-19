@@ -1,0 +1,45 @@
+name: Terraform Pipeline
+
+on: [push]
+
+
+
+jobs:
+  terraform-fmt-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Terraform Fmt Check
+        run: |
+          cd infrastructure
+          terraform init
+          terraform fmt -check -diff
+  terraform-validate-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Terraform Validate Check
+        run: |
+          cd infrastructure
+          terraform init
+          terraform validate
+  terraform-security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Checkov
+        run: pip install checkov
+      - name: Terraform Security Check
+        run: |
+          cd infrastructure
+          terraform init
+          checkov -d . --framework terraform 
+  terraform-dependency-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Terraform Dependency Check
+        run: |
+          cd infrastructure
+          terraform init
+          terraform graph -chdir=infrastructure | tgrep --invert --delimiter="->" | grep -vE "^[[:space:]]*$" | tee /dev/stderr

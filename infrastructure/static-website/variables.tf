@@ -16,3 +16,15 @@ variable "logging_bucket" {
   description = "The domain name to use for the static site"
   default     = "website-activity-logs"
 }
+
+variable "Project" {
+  type        = string
+  description = "Project Name"
+  default     = "Static Website"
+}
+
+variable "Owner" {
+  type        = string
+  description = "Project Owner Name"
+  default     = "tjmcdonough97"
+}
