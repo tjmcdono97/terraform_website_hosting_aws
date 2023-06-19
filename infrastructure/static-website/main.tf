@@ -6,22 +6,38 @@ provider "aws" {
   region = var.aws_region
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "static-webpage-terraform-state"
+    key            = "terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "terraform-up-and-running-locks"
+    encrypt        = true
+  }
+}
+
+
 # Define Cloudflare as a provider (assuming authentication is already configured)
 
 # Create an S3 bucket for the site
 resource "aws_s3_bucket" "site" {
   bucket = var.site_domain
-  versioning {
-    enabled = true
-  }
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm = "AES256"
-      }
-    }
+  # Adding logging
+
+  # Adding tags
+  tags = {
+    Owner       = var.Owner
+    Project     = var.Project
   }
 }
+
+resource "aws_s3_bucket_versioning" "versioning_site" {
+  bucket = aws_s3_bucket.site.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 
 # Configure public access settings for the site bucket
 resource "aws_s3_bucket_public_access_block" "access_block" {
@@ -42,7 +58,7 @@ resource "aws_s3_bucket_website_configuration" "site" {
   }
 
   error_document {
-    key = "error.html"
+    key = "404.html"
   }
 }
 
@@ -70,8 +86,13 @@ resource "aws_s3_bucket_policy" "site" {
 # Create an S3 bucket for the "www" subdomain
 resource "aws_s3_bucket" "www" {
   bucket = "www.${var.site_domain}"
-  versioning {
-    enabled = true
+
+}
+
+resource "aws_s3_bucket_versioning" "versioning_www" {
+  bucket = aws_s3_bucket.www.id
+  versioning_configuration {
+    status = "Enabled"
   }
 }
 
@@ -134,93 +155,22 @@ resource "cloudflare_page_rule" "https" {
 
 # Upload HTML files to the site S3 bucket
 resource "aws_s3_bucket_object" "html" {
-  for_each = fileset("${path.module}/html", "**/*")
+  for_each = fileset("${path.module}/../../html", "**/*")
 
   bucket       = aws_s3_bucket.site.id
   key          = each.key
-  source       = "${path.module}/html/${each.key}"
+  source       = "${path.module}/../../html/${each.key}"
   content_type = lookup(local.mime_types, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
-  etag         = filemd5("${path.module}/html/${each.key}")
+  etag         = filemd5("${path.module}/../../html/${each.key}")
 }
 
 # Define local variable for MIME types
 locals {
   mime_types = {
-    "aac"    = "audio/aac",
-    "abw"    = "application/x-abiword",
-    "arc"    = "application/x-freearc",
-    "avi"    = "video/x-msvideo",
-    "azw"    = "application/vnd.amazon.ebook",
-    "bin"    = "application/octet-stream",
-    "bmp"    = "image/bmp",
-    "bz"     = "application/x-bzip",
-    "bz2"    = "application/x-bzip2",
-    "csh"    = "application/x-csh",
-    "css"    = "text/css",
-    "csv"    = "text/csv",
-    "doc"    = "application/msword",
-    "docx"   = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    "eot"    = "application/vnd.ms-fontobject",
-    "epub"   = "application/epub+zip",
-    "gz"     = "application/gzip",
-    "gif"    = "image/gif",
-    "htm"    = "text/html",
     "html"   = "text/html",
-    "ico"    = "image/vnd.microsoft.icon",
-    "ics"    = "text/calendar",
-    "jar"    = "application/java-archive",
     "jpeg"   = "image/jpeg",
     "jpg"    = "image/jpeg",
-    "js"     = "text/javascript",
-    "json"   = "application/json",
-    "jsonld" = "application/ld+json",
-    "mid"    = "audio/x-midi",
-    "midi"   = "audio/x-midi",
-    "mjs"    = "text/javascript",
-    "mp3"    = "audio/mpeg",
-    "mpeg"   = "video/mpeg",
-    "mpkg"   = "application/vnd.apple.installer+xml",
-    "odp"    = "application/vnd.oasis.opendocument.presentation",
-    "ods"    = "application/vnd.oasis.opendocument.spreadsheet",
-    "odt"    = "application/vnd.oasis.opendocument.text",
-    "oga"    = "audio/ogg",
-    "ogv"    = "video/ogg",
-    "ogx"    = "application/ogg",
-    "opus"   = "audio/opus",
-    "otf"    = "font/otf",
     "png"    = "image/png",
-    "pdf"    = "application/pdf",
-    "php"    = "application/x-httpd-php",
-    "ppt"    = "application/vnd.ms-powerpoint",
-    "pptx"   = "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-    "rar"    = "application/vnd.rar",
-    "rtf"    = "application/rtf",
-    "sh"     = "application/x-sh",
-    "svg"    = "image/svg+xml",
-    "swf"    = "application/x-shockwave-flash",
-    "tar"    = "application/x-tar",
-    "tif"    = "image/tiff",
-    "tiff"   = "image/tiff",
-    "ts"     = "video/mp2t",
-    "ttf"    = "font/ttf",
-    "txt"    = "text/plain",
-    "vsd"    = "application/vnd.visio",
-    "wav"    = "audio/wav",
-    "weba"   = "audio/webm",
-    "webm"   = "video/webm",
-    "webp"   = "image/webp",
-    "woff"   = "font/woff",
-    "woff2"  = "font/woff2",
-    "xhtml"  = "application/xhtml+xml",
-    "xls"    = "application/vnd.ms-excel",
-    "xlsx"   = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "xml"    = "text/xml",
-    "xul"    = "application/vnd.mozilla.xul+xml",
-    "zip"    = "application/zip",
-    "7z"     = "application/x-7z-compressed",
-    "yaml"   = "application/x-yaml",
-    "scss"   = "text/plain",
-    "md"     = "text/markdown",
   }
 }
 
