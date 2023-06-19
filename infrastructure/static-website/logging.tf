@@ -25,7 +25,7 @@ resource "aws_s3_bucket_versioning" "versioning_logging" {
 
 # Enable logging for the main static website bucket
 resource "aws_s3_bucket_logging" "website_logging" {
-  bucket = aws_s3_bucket.site.id
+  bucket = aws_s3_bucket.www.id
 
   target_bucket = aws_s3_bucket.logging_bucket.id
 

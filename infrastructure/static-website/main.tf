@@ -171,6 +171,7 @@ locals {
     "jpeg"   = "image/jpeg",
     "jpg"    = "image/jpeg",
     "png"    = "image/png",
+    "css"    = "text/css"
   }
 }
 
