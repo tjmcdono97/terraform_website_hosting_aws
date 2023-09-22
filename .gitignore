@@ -5,7 +5,7 @@
 *.tfstate
 *.tfstate.*
 
-#vscode
+# vscode
 .vscode
 
 # Crash log files
@@ -29,3 +29,6 @@ override.tf.json
 
 # Exclude sensitive variable files
 *.tfvars.secret
+
+# Exclude the references folder
+references
