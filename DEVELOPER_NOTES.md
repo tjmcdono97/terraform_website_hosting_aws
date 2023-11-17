@@ -8,3 +8,5 @@ In the AWS Management Console I:
 4. created an access key for that user
 
 I then ran `aws configure` in the terminal and configured the aws cli. 
+
+6. Added a limited DynamoDB policy to the group

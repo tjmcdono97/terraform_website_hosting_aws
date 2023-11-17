@@ -2,7 +2,7 @@
 
 This project provides Terraform configurations to deploy a static website to AWS S3 and configure Cloudflare DNS.
 
-Check out the webpage at https://mayaunit148b.com/ # TODO: add correct address
+Check out the webpage at https://kcequineservices.com/
 
 ## Deployment Managed by Spacelift.io
 

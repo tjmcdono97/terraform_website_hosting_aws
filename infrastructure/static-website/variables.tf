@@ -20,7 +20,7 @@ variable "logging_bucket" {
 variable "Project" {
   type        = string
   description = "Project Name"
-  default     = "Static Website"
+  default     = "KC Equine Services"
 }
 
 variable "Owner" {

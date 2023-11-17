@@ -8,7 +8,7 @@ provider "aws" {
 
 terraform {
   backend "s3" {
-    bucket         = "static-webpage-terraform-state"
+    bucket         = "kc-equine-services-terraform-state"
     key            = "terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-up-and-running-locks"
