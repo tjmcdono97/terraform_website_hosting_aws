@@ -35,3 +35,6 @@ references
 
 # Exclude .DS_Store
 **/.DS_Store
+
+# Exclude cloudflare.tf used for local testing
+**/cloudflare.tf
