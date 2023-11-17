@@ -14,10 +14,11 @@ terraform {
     dynamodb_table = "terraform-up-and-running-locks"
     encrypt        = true
   }
+
+  # We define Cloudflare as a provider in providers.tf (assuming authentication is already configured)
+
 }
 
-
-# Define Cloudflare as a provider (assuming authentication is already configured)
 
 # Create an S3 bucket for the site
 resource "aws_s3_bucket" "site" {
@@ -26,8 +27,8 @@ resource "aws_s3_bucket" "site" {
 
   # Adding tags
   tags = {
-    Owner       = var.Owner
-    Project     = var.Project
+    Owner   = var.Owner
+    Project = var.Project
   }
 }
 
@@ -167,11 +168,11 @@ resource "aws_s3_bucket_object" "html" {
 # Define local variable for MIME types
 locals {
   mime_types = {
-    "html"   = "text/html",
-    "jpeg"   = "image/jpeg",
-    "jpg"    = "image/jpeg",
-    "png"    = "image/png",
-    "css"    = "text/css"
+    "html" = "text/html",
+    "jpeg" = "image/jpeg",
+    "jpg"  = "image/jpeg",
+    "png"  = "image/png",
+    "css"  = "text/css"
   }
 }
 
