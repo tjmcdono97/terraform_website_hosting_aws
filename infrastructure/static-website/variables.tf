@@ -26,5 +26,5 @@ variable "Project" {
 variable "Owner" {
   type        = string
   description = "Project Owner Name"
-  default     = "tjmcdonough97"
+  default     = "1kalderson"
 }
