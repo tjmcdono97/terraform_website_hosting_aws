@@ -32,3 +32,6 @@ override.tf.json
 
 # Exclude the references folder
 references
+
+# Exclude .DS_Store
+**/.DS_Store
