@@ -10,3 +10,6 @@ In the AWS Management Console I:
 I then ran `aws configure` in the terminal and configured the aws cli. 
 
 6. Added a limited DynamoDB policy to the group
+
+## Tutorial (helps with cloudflare token)
+https://developer.hashicorp.com/terraform/tutorials/applications/cloudflare-static-website
