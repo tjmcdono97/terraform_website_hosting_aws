@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "static-webpage-terraform-state"
+  bucket = "kc-equine-services-terraform-state"
 
   lifecycle {
     prevent_destroy = false

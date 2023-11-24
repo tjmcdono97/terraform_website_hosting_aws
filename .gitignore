@@ -5,8 +5,9 @@
 *.tfstate
 *.tfstate.*
 
-#vscode
+# vscode
 .vscode
+
 # Crash log files
 crash.log
 
@@ -28,3 +29,12 @@ override.tf.json
 
 # Exclude sensitive variable files
 *.tfvars.secret
+
+# Exclude the references folder
+references
+
+# Exclude .DS_Store
+**/.DS_Store
+
+# Exclude cloudflare.tf used for local testing
+**/cloudflare.tf
