@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "site_domain" {
   type        = string
   description = "The domain name to use for the static site"
-  default     = "www.kcequineservices.com"
+  default     = "www.aldersonequine.com"
 }
 
 
@@ -20,7 +20,7 @@ variable "logging_bucket" {
 variable "Project" {
   type        = string
   description = "Project Name"
-  default     = "KC Equine Services"
+  default     = "Alderson Equine Services"
 }
 
 variable "Owner" {
