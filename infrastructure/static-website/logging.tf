@@ -14,6 +14,7 @@ resource "aws_s3_bucket_ownership_controls" "logging_bucket_ownership_controls" 
 resource "aws_s3_bucket_acl" "log_bucket_acl" {
   bucket = aws_s3_bucket.logging_bucket.id
   acl    = "log-delivery-write"
+  depends_on = [aws_s3_bucket_ownership_controls.logging_bucket_ownership_controls]
 }
 
 resource "aws_s3_bucket_versioning" "versioning_logging" {
